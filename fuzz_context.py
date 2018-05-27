@@ -15,8 +15,13 @@ import mutex
 from telnet_connector import TelnetAdb
 from telnet_connector import GsmProfile, NetworkDelay, NetworkStatus
 import config_reader as config
-
 from interval_event import IntervalEvent
+
+import os
+dir = os.path.dirname(__file__)
+StopFlagWatcher = os.path.join(dir,'test/StopFlagWatcher')
+ContextEventLog = os.path.join(dir,'test/ContextEventLog')
+
 
 PRINT_FLAG = True
 
@@ -264,7 +269,7 @@ class Fuzzer:
                                  interval_events: List[IntervalEvent]):
         # util.debug_print("Execution: ", interval_events, flag=PRINT_FLAG)
 
-        file = open('test/StopFlagWatcher', 'r')
+        file = open(StopFlagWatcher, 'r')
 
         for interval_event in interval_events:
 
@@ -285,10 +290,10 @@ class Fuzzer:
 
             print(interval_event)
 
-            file2 = open("test/ContextEventLog", 'r')
+            file2 = open(ContextEventLog, 'r')
             filedata = file2.read()
 
-            file2 = open("test/ContextEventLog", "w")
+            file2 = open(ContextEventLog, "w")
 
             if len(filedata) < 10:
                 file2.write(IntervalEvent.__str__(interval_event))
@@ -355,7 +360,7 @@ class Fuzzer:
         # self.__execute_interval_event(
         #     device.set_user_rotation, interval_events)
         # device.set_user_rotation(UserRotation.ROTATION_POTRAIT)
-        file = open('test/StopFlagWatcher', 'r')
+        file = open(StopFlagWatcher, 'r')
 
         for interval_event in interval_events:
 
@@ -376,10 +381,10 @@ class Fuzzer:
 
             print(interval_event)
 
-            file2 = open("test/ContextEventLog", 'r')
+            file2 = open(ContextEventLog, 'r')
             filedata = file2.read()
 
-            file2 = open("test/ContextEventLog", "w")
+            file2 = open(ContextEventLog, "w")
 
             if len(filedata) < 10:
                 file2.write(IntervalEvent.__str__(interval_event))

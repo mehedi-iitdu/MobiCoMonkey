@@ -16,8 +16,12 @@ import util
 import monkey
 from adb_logcat import Logcat, TestType
 import mutex
-eventlog = open('test/EventLog', 'w')
 
+dir = os.path.dirname(__file__)
+eventFile = os.path.join(dir, 'test/EventLog')
+StopFlagWatcher = os.path.join(dir,'test/StopFlagWatcher')
+
+eventlog = open(eventFile, 'w')
 
 def reset_emulator(
         host: str = config.LOCALHOST,
@@ -42,20 +46,23 @@ def start_test():
 
     log.start_logcat()
 
+    activity = os.path.join(dir,'test/activity')
+    activity_list = os.path.join(dir,'test/activity_list')
+
     if config.GUIDED_APPROACH == 1:
-        file = open('test/activity_list', 'r')
+        file = open(activity_list, 'r')
         for l in file.readlines():
             activities.append(l.strip())
             print(l.strip())
         file.close()
 
     else:
-        file = open("test/activity", "w")
+        file = open(activity, "w")
         file.write(api_commands.adb_get_activity_list(emulator, apk))
         file.close()
 
-        file = open('test/activity', 'r')
-        file2 = open('test/activity_list', 'w')
+        file = open(activity, 'r')
+        file2 = open(activity_list, 'w')
 
         for l in file.readlines():
             if 'A: android:name' in l and 'Activity' in l:
@@ -65,7 +72,7 @@ def start_test():
                 print(arr[1])
         file.close()
         file2.close()
-        os.remove('test/activity')
+        os.remove(activity)
 
     print(len(activities))
 
@@ -117,7 +124,7 @@ def force_update_element_list(emulator: Emulator, adb_settings: AdbSettings):
 def test_ui(activity: str, emulator: Emulator, adb_settings: AdbSettings,
             display_height: str):
 
-    file = open('test/StopFlagWatcher', 'w')
+    file = open(StopFlagWatcher, 'w')
     file.truncate()
 
     element_list = get_elements_list(emulator, adb_settings)
